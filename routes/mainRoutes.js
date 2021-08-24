@@ -8,5 +8,6 @@ route.post('/post-content', mainControllers.postContent)
 route.get('/blog-content/:id', mainControllers.getPostContent)
 route.get('/all-posts', mainControllers.allContent)
 route.post('/post-comments', mainControllers.postComment)
+route.get('/get-comments/:postID', mainControllers.getComments)
 
 module.exports = route

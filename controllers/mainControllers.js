@@ -31,7 +31,8 @@ module.exports = {
         },
         tags: req.body.tags,
         title: req.body.title,
-        content: req.body.content
+        content: req.body.content,
+        author: req.body.author
       })
 
       const results = await newPost.save()
@@ -76,24 +77,25 @@ module.exports = {
       const comments = await Comments.findOne({ postID: postID})
 
       if (comments) {
-        const comments = {
-          name: req.body.name,
-          content: req.body.content
-        }
-        const { nModified } = await Comments.update(
-          { postID: postID },
-          {
-            $push: {
-              comments: comments
-            }
+        if (req.body.name && req.body.content) {
+          const comments = {
+            name: req.body.name,
+            content: req.body.content
           }
-        )
+          const { nModified } = await Comments.updateOne(
+            { postID: postID },
+            {
+              $push: {
+                comments: comments
+              }
+            }
+          )
 
-        if (nModified === 1) {
-          const results = await Comments.findOne({ postID: postID })
-          return res.status(200).json({
-            results
-          })
+          if (nModified === 1) {
+            return res.status(200).json({
+              message: 'Commented Added'
+            })
+          }
         }
       } else {
         const newComment = new Comments({
@@ -106,9 +108,22 @@ module.exports = {
 
         const results = await newComment.save()
         return res.status(200).json({
-          results
+          message: 'Commented Added'
         })
       }
+    } catch (err) {
+      res.json({
+        error: err.message
+      })
+    }
+  },
+  getComments: async (req, res) => {
+    try {
+      const postID = req.params.postID
+      const results = await Comments.findOne({postID: postID})
+      res.json({
+        results
+      })
     } catch (err) {
       res.json({
         error: err.message
