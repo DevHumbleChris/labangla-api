@@ -11,8 +11,9 @@ const postSchema = new mongoose.Schema({
       required: true
     }
   },
-  tags: {
-    type: String
+  author: {
+    type: String,
+    required: true
   },
   title: {
     type: String,
@@ -21,6 +22,10 @@ const postSchema = new mongoose.Schema({
   content: {
     type: String,
     required: true
+  },
+  dateCreated: {
+    type: Date,
+    default: Date.now
   }
 })
 
