@@ -70,6 +70,18 @@ module.exports = {
       })
     }
   },
+  trendingPosts: async (req, res) => {
+    try {
+      const posts = await Post.find({}).limit(5).sort({ dateCreated: -1 })
+      res.json({
+        posts
+      })
+    } catch (err) {
+      res.json({
+        error: err.message
+      })
+    }
+  },
   postComment: async (req, res) => {
     try {
       const postID = req.body.postID
